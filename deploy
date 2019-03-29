@@ -4,7 +4,8 @@
 OPTIND=1         # Reset in case getopts has been used previously in the shell.
 
 # Initialize our own variables:
-deploy_env="DEV"
+deploy_env=""
+port="8080"
 
 function show_help () {
     echo "Usage: ./deploy -e [DEV|PROD]"
@@ -18,13 +19,15 @@ while getopts "h?e:" opt; do
         ;;
     e)  deploy_env=${OPTARG}
         ;;
+    # p)  port=${OPTARG}
+    #     ;;
     esac
 done
 
 if [ "$deploy_env" == "DEV" ] ; then
-    GIN_MODE=debug go run src/server.go
+    GIN_MODE=debug PORT=$port go run src/server.go
 elif [ "$deploy_env" == "PROD" ] ; then
-    GIN_MODE=release go run src/server.go
+    GIN_MODE=release PORT=$port go run src/server.go
 else
     show_help
 fi
